@@ -411,8 +411,20 @@ app.get('/api/genres', async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log('🎵 Server running on http://localhost:5000');
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: '🎵 Music Library Backend is running!',
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    timestamp: new Date().toISOString()
+  });
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`🎵 Server running on port ${PORT}`);
   console.log('🎬 YouTube Music Integration Active!');
   console.log('🔐 Authentication System Ready!');
   console.log('✅ Login & Dashboard Features Enabled!');
