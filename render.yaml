@@ -1,0 +1,25 @@
+services:
+  # Backend Service
+  - type: web
+    name: music-library-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: node backend/auth-server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        fromDatabase:
+          name: music-db
+          property: connectionString
+
+databases:
+  - name: music-db
+    databaseName: musicDB
+    plan: free
