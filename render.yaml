@@ -15,11 +15,6 @@ services:
       - key: PORT
         value: 5000
       - key: MONGODB_URI
-        fromDatabase:
-          name: music-db
-          property: connectionString
-
-databases:
-  - name: music-db
-    databaseName: musicDB
-    plan: free
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
