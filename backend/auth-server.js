@@ -50,14 +50,21 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this-in-pro
 // Connect to MongoDB (use environment variable in production)
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/musicDB';
 
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('✅ Connected to MongoDB');
+// Debug: Log the MongoDB URI being used (hide password)
+console.log('🔍 Attempting MongoDB connection...');
+console.log('🔍 MONGODB_URI exists:', !!process.env.MONGODB_URI);
+if (process.env.MONGODB_URI) {
+  const safeUri = process.env.MONGODB_URI.replace(/:\/\/([^:]+):([^@]+)@/, '://***:***@');
+  console.log('🔍 Using URI:', safeUri);
+}
+
+mongoose.connect(MONGODB_URI).then(() => {
+  console.log('✅ Connected to MongoDB successfully!');
+  console.log('✅ Database:', mongoose.connection.name);
   initializeSampleData();
 }).catch(err => {
-  console.error('❌ MongoDB connection error:', err);
+  console.error('❌ MongoDB connection error:', err.message);
+  console.error('❌ Failed URI pattern:', MONGODB_URI.substring(0, 20) + '...');
 });
 
 // User Schema
